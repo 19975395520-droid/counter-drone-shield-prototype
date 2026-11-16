@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>反制盾 · 一键对讲 Demo</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="ptt.css">
+</head>
+<body>
+  <main class="device-shell">
+    <header class="status-bar">
+      <div class="brand"><span class="brand-mark">R</span><strong>反制盾</strong></div>
+      <div class="status-items"><span><i class="dot green"></i>设备在线</span><span>专网 5G</span><span id="clock">10:28</span><span class="battery">86%</span></div>
+    </header>
+
+    <section id="homeScreen" class="screen home-screen active" aria-label="设备首页">
+      <div class="home-heading">
+        <div><p>作战终端 · H1S-PS1</p><h1>设备首页</h1></div>
+        <div class="weather"><span>当前任务</span><strong>重点区域低空保障</strong></div>
+      </div>
+      <div class="home-grid">
+        <button class="home-card talk-shortcut" id="openTalk">
+          <span class="home-icon">🎙</span><span><strong>一键对讲</strong><small>在线 8 人 · 2 个小组</small></span><i>进入 ›</i>
+        </button>
+        <button class="home-card"><span class="home-icon">⌁</span><span><strong>无人机探测</strong><small>当前 3 个目标</small></span></button>
+        <button class="home-card"><span class="home-icon">◎</span><span><strong>反制控制</strong><small>系统待命</small></span></button>
+        <button class="home-card"><span class="home-icon">▦</span><span><strong>任务记录</strong><small>今日 12 条</small></span></button>
+      </div>
+      <div class="home-note"><i class="dot green"></i>对讲服务已连接，可直接发起通话</div>
+    </section>
+
+    <section id="talkScreen" class="screen talk-screen" aria-label="一键对讲">
+      <aside class="sidebar">
+        <div class="side-title"><button id="backHome" aria-label="返回首页">‹</button><div><small>通讯协同</small><h1>一键对讲</h1></div></div>
+        <div class="tabs" role="tablist">
+          <button class="tab active" data-tab="contacts">通讯录 <span>8</span></button>
+          <button class="tab" data-tab="groups">对讲小组 <span id="groupCount">2</span></button>
+        </div>
+        <div class="search"><span>⌕</span><input id="searchInput" placeholder="搜索人员或小组"></div>
+        <div id="contactsList" class="channel-list"></div>
+        <div id="groupsList" class="channel-list hidden"></div>
+        <button id="createGroup" class="create-group hidden">＋ 创建对讲小组</button>
+      </aside>
+
+      <section class="conversation">
+        <header class="conversation-head">
+          <div class="target-avatar group" id="targetAvatar">巡防</div>
+          <div><h2 id="targetName">一号巡防组</h2><p id="targetMeta"><i class="dot green"></i>5 人在线 · 小组频道 01</p></div>
+          <div class="head-actions"><button title="成员">♟ <span id="memberNumber">5</span></button><button title="更多">•••</button></div>
+        </header>
+        <div class="channel-banner"><span>CH 01</span><div><strong>专网加密频道</strong><small>当前信号稳定 · 延迟 36ms</small></div><i class="signal">▂▄▆█</i></div>
+        <div class="messages" id="messages" aria-live="polite"></div>
+        <footer class="ptt-panel">
+          <div class="ptt-status"><span id="pttHint">按住麦克风开始讲话</span><span id="timer">00:00</span></div>
+          <button id="pttButton" class="ptt-button" aria-label="按住说话">
+            <span class="mic" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none"><rect x="17" y="7" width="14" height="25" rx="7"/><path d="M11 24v2a13 13 0 0 0 26 0v-2M24 39v5M18 44h12"/></svg></span>
+            <strong>按住说话</strong><small>松开发送</small>
+          </button>
+          <p>按住按钮或按住 <kbd>空格键</kbd> 发话</p>
+        </footer>
+      </section>
+
+      <aside class="members-panel">
+        <header><span>当前成员</span><small id="onlineSummary">5 / 5 在线</small></header>
+        <div id="memberList"></div>
+        <div class="device-health"><span>频道状态</span><strong><i class="dot green"></i>正常</strong><small>语音链路已加密</small></div>
+      </aside>
+    </section>
+  </main>
+
+  <dialog id="groupDialog">
+    <form method="dialog" id="groupForm">
+      <header><div><small>新建频道</small><h2>创建对讲小组</h2></div><button value="cancel" aria-label="关闭">×</button></header>
+      <label>小组名称<input id="groupName" required maxlength="12" placeholder="例如：二号巡防组"></label>
+      <fieldset><legend>选择成员 <span id="selectedCount">已选 0 人</span></legend><div id="groupMemberChoices"></div></fieldset>
+      <footer><button value="cancel" class="secondary">取消</button><button id="saveGroup" value="default">创建小组</button></footer>
+    </form>
+  </dialog>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>
