@@ -2857,6 +2857,16 @@ html[data-theme="light"] .risk-condition :is(input[type=number],select){color:#2
   .risk-condition{grid-template-columns:28px minmax(140px,190px) minmax(0,1fr)}
 }
 @media (max-width:900px){.risk-condition{grid-template-columns:28px 1fr}.risk-condition>:last-child{grid-column:2}.risk-level-card{margin:12px 0}}
+/* typography-level-correction: iOS/iPadOS hierarchy applied to all three device modes. */
+.app-shell .primary-nav>button,
+.app-shell .primary-nav>button :is(span,strong){font-size:28px!important;line-height:34px!important;font-weight:400!important}
+.app-shell :is(.reference-control-sidebar,.handheld-control-panel,.control-panel) .control-options>button,
+.app-shell :is(.reference-control-sidebar,.handheld-control-panel,.control-panel) .control-options>button :is(strong,span),
+.app-shell .counter-mode-list>.counter-mode,
+.app-shell .counter-mode-list>.counter-mode :is(strong,span),
+.app-shell .settings-nav>button,
+.app-shell .settings-nav>button :is(strong,span){font-size:22px!important;line-height:28px!important;font-weight:500!important}
+.app-shell .settings-workspace :is(.setting-item-copy>strong,.setting-info>strong,.alarm-option-row strong,.storage-body h4,.storage-overview>button>header strong,.runtime-program-setting>strong){font-size:20px!important;line-height:25px!important;font-weight:500!important}
 </style>
 <script id="risk-settings-and-label-fixes">(function(){
   const toggle=(on,label)=>'<button type="button" class="toggle'+(on?' on':'')+'" role="switch" aria-checked="'+on+'" aria-label="'+label+'"><i></i></button>';
@@ -3031,4 +3041,4 @@ html,body,.app-shell{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",
 <script id="apple-dynamic-type-integration">(function(){
   function attach(doc){if(!doc||!doc.documentElement||doc.getElementById('apple-dynamic-type-styles'))return;const source=document.getElementById('apple-dynamic-type-styles'),style=doc.createElement('style');style.id=source.id;style.textContent=source.textContent;doc.head.appendChild(style)}
   function connect(){document.querySelectorAll('iframe').forEach(frame=>{try{attach(frame.contentDocument)}catch(_){}if(!frame.dataset.appleTypeLoad){frame.dataset.appleTypeLoad='true';frame.addEventListener('load',()=>{try{attach(frame.contentDocument)}catch(_){}})}})}connect();new MutationObserver(connect).observe(document.documentElement,{childList:true,subtree:true});
-})();</script></body></html>
+})();</script><link rel="stylesheet" href="fpv-alert-detail-fixes.css"><script src="fpv-alert-detail-fixes.js"></script></body></html>
