@@ -272,7 +272,7 @@
     if (category === '界面展示设置') {
       const sections = [...workspace.querySelectorAll('.settings-sections > section')].filter(section => /^(探测界面|告警详情|告警详情展示|告警详情显示)$/.test(section.querySelector(':scope > h3')?.textContent.trim() || ''));
       if (sections.length) {
-        doc._relocatedDisplaySections = sections;
+        doc._relocatedDisplaySections = sections.map(section => section.cloneNode(true));
         sections.forEach(section => { section.style.display = 'none'; });
       }
     }
@@ -283,8 +283,13 @@
         doc._relocatedDisplaySections.forEach(section => {
           section.dataset.relocatedDisplay = 'true';
           section.style.display = '';
-          anchor.after(section);
-          anchor = section;
+          const copy = section.cloneNode(true);
+          copy.querySelectorAll('button.toggle').forEach(toggle => toggle.addEventListener('click', () => {
+            const on = toggle.classList.toggle('on');
+            toggle.setAttribute('aria-checked', String(on));
+          }));
+          anchor.after(copy);
+          anchor = copy;
         });
       } else if (detection && !doc._displayRelocationLoading) {
         const buttons = [...doc.querySelectorAll('.settings-nav button')];
