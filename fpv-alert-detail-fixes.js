@@ -131,6 +131,13 @@
       display.setAttribute('role', 'status');
       display.innerHTML = '<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="18" height="13" rx="2"/><path d="M8 21h8M12 16v5"/></svg><span>设备状态：</span><strong></strong>';
       display.querySelector('strong').textContent = status;
+      display.querySelector('svg').style.cursor = 'pointer';
+      display.querySelector('svg').setAttribute('role','button');
+      display.querySelector('svg').setAttribute('aria-label','进入扫频');
+      display.querySelector('svg').addEventListener('click',()=>{
+        if(doc.defaultView.innerWidth>900)return;
+        openSweep(doc);
+      });
       trigger.style.display = 'none';
       if (!trigger.parentElement.querySelector('.device-status-display')) trigger.after(display);
     });
@@ -275,6 +282,34 @@
     doc.querySelectorAll('.alert-detail-dialog').forEach(detail => enhanceDetail(doc, detail));
     normalizeHeight(doc);
     updateSettings(doc);
+  }
+
+  function openSweep(doc) {
+    if(doc.querySelector('.handheld-sweep-page'))return;
+    const page=doc.createElement('section');page.className='handheld-sweep-page';
+    page.innerHTML='<header><button class="sweep-back" type="button">‹ 返回</button><h1>扫频</h1></header><div class="sweep-content"><div class="sweep-toolbar"><strong>扫频范围</strong><label><input type="number" value="400" min="1" max="6000"> MHz</label><span>—</span><label><input type="number" value="500" min="1" max="6000"> MHz</label><button data-play="run" aria-label="开始">▶</button><button data-play="pause" aria-label="暂停">Ⅱ</button><button data-play="stop" aria-label="停止">■</button></div><p class="sweep-message" role="status">演示扫频 · 运行中</p></div>';
+    const content=page.querySelector('.sweep-content');let running=true, stopped=false, tick=0;
+    const modes=['频谱图','荧光谱','瀑布图','3D 瀑布图'];
+    const charts=[];
+    for(let i=0;i<2;i++){
+      const block=doc.createElement('div');block.className='sweep-chart';
+      const tabs=doc.createElement('div');tabs.className='sweep-tabs';
+      const canvas=doc.createElement('canvas');canvas.width=640;canvas.height=340;canvas.setAttribute('aria-label','扫频演示图表');
+      const chart={canvas,mode:i};charts.push(chart);
+      modes.forEach((name,index)=>{const button=doc.createElement('button');button.textContent=name;button.type='button';button.classList.toggle('active',index===i);button.addEventListener('click',()=>{chart.mode=index;tabs.querySelectorAll('button').forEach((b,n)=>b.classList.toggle('active',n===index));draw(chart);});tabs.append(button);});
+      block.append(tabs,canvas);content.append(block);
+    }
+    function draw(chart){const ctx=chart.canvas.getContext('2d'),w=640,h=340;ctx.fillStyle='#050d12';ctx.fillRect(0,0,w,h);ctx.font='14px sans-serif';ctx.strokeStyle='#23313b';ctx.fillStyle='#82949f';
+      for(let j=0;j<5;j++){const y=30+j*65;ctx.beginPath();ctx.moveTo(44,y);ctx.lineTo(w-12,y);ctx.stroke();ctx.fillText(String(-30-j*20),5,y+5);}
+      const inputs=page.querySelectorAll('input');const lo=Number(inputs[0].value),hi=Number(inputs[1].value);ctx.fillText('dBFS',6,17);ctx.fillText(lo+' MHz',44,330);ctx.fillText(hi+' MHz',550,330);
+      if(stopped)return;
+      if(chart.mode>=2){for(let y=30;y<290;y+=3){for(let x=44;x<625;x+=4){const v=(Math.sin(x*.08+tick*.2+y*.03)+1)/2;ctx.fillStyle=`hsl(${220-v*150} 80% ${12+v*25}%)`;ctx.fillRect(x,y,4,3);}}return;}
+      ctx.beginPath();ctx.moveTo(44,290);for(let x=44;x<625;x++){const spike=Math.exp(-Math.pow((x-180)/5,2))*90+Math.exp(-Math.pow((x-465)/8,2))*65;const noise=Math.sin(x*2.1+tick)*6+Math.sin(x*.73+tick*.5)*4;ctx.lineTo(x,280-spike-noise);}ctx.lineTo(625,300);ctx.closePath();const gradient=ctx.createLinearGradient(0,190,0,300);gradient.addColorStop(0,'#62b9ff');gradient.addColorStop(.55,'#74e946');gradient.addColorStop(1,chart.mode===1?'#ed492a':'#25572b');ctx.fillStyle=gradient;ctx.fill();ctx.strokeStyle='#a4ee60';ctx.stroke();
+    }
+    page.querySelector('.sweep-back').addEventListener('click',()=>{clearInterval(timer);page.remove();});
+    page.querySelectorAll('[data-play]').forEach(button=>button.addEventListener('click',()=>{running=button.dataset.play==='run';stopped=button.dataset.play==='stop';page.querySelector('.sweep-message').textContent='演示扫频 · '+(running?'运行中':stopped?'已停止':'已暂停');charts.forEach(draw);}));
+    page.querySelectorAll('input').forEach(input=>input.addEventListener('change',()=>{const values=[...page.querySelectorAll('input')].map(x=>Number(x.value));if(values[0]>=values[1]){page.querySelector('.sweep-message').textContent='结束频率须大于起始频率';return;}charts.forEach(draw);}));
+    doc.body.append(page);charts.forEach(draw);const timer=setInterval(()=>{if(running){tick++;charts.forEach(draw);}},250);
   }
 
   function updateSettings(doc) {
