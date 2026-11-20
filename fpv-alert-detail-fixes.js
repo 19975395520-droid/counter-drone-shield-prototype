@@ -304,7 +304,8 @@
       workspace.querySelectorAll('section').forEach(section => {
         const title = section.querySelector(':scope > h3')?.textContent.trim();
         if (title === '解密服务器' || title === '探测参数') {
-          if (section.style.display === 'none') section.style.removeProperty('display');
+          if (title === '解密服务器' && section.style.display === 'none') section.style.removeProperty('display');
+          if (title === '探测参数') section.style.display = 'none';
           section.hidden = false;
         }
       });
