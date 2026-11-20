@@ -361,12 +361,24 @@
     doc.querySelectorAll('.alarm-drawer').forEach((drawer,index)=>{drawer.style.display=index?'none':'block';if(!index){drawer.open=true;const summary=drawer.querySelector('summary');if(summary)summary.style.display='none';}});
     doc.querySelectorAll('.risk-settings-module').forEach(module=>{
       if(module.dataset.drillReady)return;module.dataset.drillReady='true';
-      const entry=doc.createElement('button');entry.type='button';entry.className='risk-drill-entry';entry.textContent='风险参数设置　›';
+      const entry=doc.createElement('button');entry.type='button';entry.className='setting-item risk-drill-entry';entry.innerHTML='<div class="setting-item-copy"><strong>风险参数设置</strong><span>配置信任模式与风险等级条件</span></div><span class="ui-disclosure-chevron">⌄</span>';entry.setAttribute('aria-expanded','false');
       const back=doc.createElement('button');back.type='button';back.className='risk-drill-back';back.textContent='‹ 返回参数设置';
       module.prepend(back); module.classList.add('risk-collapsed');module.before(entry);
-      entry.addEventListener('click',()=>{module.classList.remove('risk-collapsed');entry.hidden=true;module.closest('.settings-workspace')?.classList.add('risk-drill-active');});
-      back.addEventListener('click',()=>{module.classList.add('risk-collapsed');entry.hidden=false;module.closest('.settings-workspace')?.classList.remove('risk-drill-active');});
+      entry.addEventListener('click',()=>{const open=module.classList.contains('risk-collapsed');module.classList.toggle('risk-collapsed',!open);entry.setAttribute('aria-expanded',String(open));});
+      back.addEventListener('click',()=>{module.classList.add('risk-collapsed');entry.setAttribute('aria-expanded','false');});
     });
+    if (category === '参数设置') {
+      const displaySection = [...workspace.querySelectorAll('section')].find(section => section.querySelector(':scope > h3')?.textContent.trim() === '告警详情显示');
+      const module = workspace.querySelector('.risk-settings-module');
+      const entry = workspace.querySelector('.risk-drill-entry');
+      if (displaySection && module && entry && entry.parentElement !== displaySection) {
+        const firstRow = displaySection.querySelector('.setting-item');
+        if (firstRow) firstRow.before(entry); else displaySection.append(entry);
+        entry.after(module);
+        module.querySelector('.risk-drill-back')?.remove();
+        workspace.classList.remove('risk-drill-active');
+      }
+    }
   }
 
   function attach(doc) {

@@ -206,3 +206,7 @@
 .custom-position-fields label { display: grid; gap: 8px; flex: 1; }
 .custom-position-fields input { width: 100%; min-width: 0; padding: 10px; color: #dfedf7; background: #102436; border: 1px solid #3b586f; border-radius: 6px; }
 .mode-picker { display: grid !important; grid-template-columns: repeat(3,minmax(0,1fr)) !important; }
+.app-shell .risk-drill-entry { display: flex; align-items: center; justify-content: space-between; width: 100%; margin: 0; padding: 20px 24px; text-align: left; background: transparent; border: 0; border-bottom: 1px solid #2c4053; border-radius: 0; }
+.app-shell .risk-drill-entry strong { display: block; color: #d9e7f3; font-size: 20px !important; line-height: 25px; font-weight: 500; }
+.app-shell .risk-drill-entry .setting-item-copy > span { display: block; margin-top: 5px; color: #8ba3b8; font-size: 16px !important; }
+.app-shell .risk-drill-entry[aria-expanded=true] > .ui-disclosure-chevron { transform: rotate(180deg); }
