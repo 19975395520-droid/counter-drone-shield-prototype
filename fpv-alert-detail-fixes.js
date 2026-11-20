@@ -378,6 +378,11 @@
         module.querySelector('.risk-drill-back')?.remove();
         workspace.classList.remove('risk-drill-active');
       }
+      if (displaySection) {
+        workspace.querySelectorAll('.risk-drill-entry').forEach(item => {
+          if (item.parentElement !== displaySection) item.remove();
+        });
+      }
     }
   }
 
