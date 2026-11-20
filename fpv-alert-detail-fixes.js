@@ -267,6 +267,40 @@
   }
 
   function updateSettings(doc) {
+    const workspace = doc.querySelector('.settings-workspace');
+    const category = workspace?.querySelector('.workspace-heading strong')?.textContent.trim();
+    if (category === '界面展示设置') {
+      const sections = [...workspace.querySelectorAll('.settings-sections > section')].filter(section => /^(探测界面|告警详情|告警详情展示|告警详情显示)$/.test(section.querySelector(':scope > h3')?.textContent.trim() || ''));
+      if (sections.length) {
+        doc._relocatedDisplaySections = sections;
+        sections.forEach(section => { section.style.display = 'none'; });
+      }
+    }
+    if (category === '参数设置' && !workspace.querySelector('[data-relocated-display]')) {
+      const detection = [...workspace.querySelectorAll('section')].find(section => section.querySelector(':scope > h3')?.textContent.trim() === '探测参数');
+      if (detection && doc._relocatedDisplaySections?.length) {
+        let anchor = detection;
+        doc._relocatedDisplaySections.forEach(section => {
+          section.dataset.relocatedDisplay = 'true';
+          section.style.display = '';
+          anchor.after(section);
+          anchor = section;
+        });
+      } else if (detection && !doc._displayRelocationLoading) {
+        const buttons = [...doc.querySelectorAll('.settings-nav button')];
+        const display = buttons.find(button => button.querySelector('strong')?.textContent.trim() === '界面展示设置');
+        const parameters = buttons.find(button => button.querySelector('strong')?.textContent.trim() === '参数设置');
+        if (display && parameters) {
+          doc._displayRelocationLoading = true;
+          display.click();
+          doc.defaultView.setTimeout(() => {
+            updateSettings(doc);
+            parameters.click();
+            doc._displayRelocationLoading = false;
+          }, 100);
+        }
+      }
+    }
     doc.querySelectorAll('.settings-nav button').forEach(button => {
       if (button.querySelector('strong')?.textContent.trim() === '网络') button.style.display = 'none';
     });
