@@ -124,6 +124,17 @@
   }
 
   function update(doc) {
+    doc.querySelectorAll('.runtime-trigger').forEach(trigger => {
+      const status = trigger.querySelector('strong')?.textContent.includes('离线') ? '离线' : '运行中';
+      const display = doc.createElement('div');
+      display.className = 'device-status-display';
+      display.setAttribute('role', 'status');
+      display.innerHTML = '<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="18" height="13" rx="2"/><path d="M8 21h8M12 16v5"/></svg><span>设备状态：</span><strong></strong>';
+      display.querySelector('strong').textContent = status;
+      trigger.style.display = 'none';
+      if (!trigger.parentElement.querySelector('.device-status-display')) trigger.after(display);
+    });
+    doc.querySelectorAll('.runtime-programs').forEach(panel => { panel.style.display = 'none'; });
     doc.querySelectorAll('.map').forEach(map => {
       let overlay = map.querySelector('.pilot-map-links');
       if (!overlay) {

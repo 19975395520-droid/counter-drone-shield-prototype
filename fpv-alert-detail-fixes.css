@@ -213,3 +213,6 @@
 [data-debug-detection] { padding: 16px; border: 1px solid #3b586f; border-radius: 8px; }
 [data-debug-detection] label { display: flex; align-items: center; gap: 16px; margin: 16px 0; }
 [data-debug-detection] select { padding: 10px; color: #d9e7f3; background: #183047; }
+.device-status-display { display: flex; align-items: center; gap: 8px; padding: 12px 16px; color: #9fcbbd; font-size: 17px; line-height: 24px; }
+.device-status-display svg { flex: none; }
+.device-status-display strong { font-weight: 500; }
