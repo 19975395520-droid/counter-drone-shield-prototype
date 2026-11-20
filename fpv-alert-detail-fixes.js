@@ -269,6 +269,15 @@
   function updateSettings(doc) {
     const workspace = doc.querySelector('.settings-workspace');
     const category = workspace?.querySelector('.workspace-heading strong')?.textContent.trim();
+    if (category === '参数设置') {
+      workspace.querySelectorAll('section').forEach(section => {
+        const title = section.querySelector(':scope > h3')?.textContent.trim();
+        if (title === '解密服务器' || title === '探测参数') {
+          if (section.style.display === 'none') section.style.removeProperty('display');
+          section.hidden = false;
+        }
+      });
+    }
     if (category === '界面展示设置') {
       const sections = [...workspace.querySelectorAll('.settings-sections > section')].filter(section => /^(探测界面|告警详情|告警详情展示|告警详情显示)$/.test(section.querySelector(':scope > h3')?.textContent.trim() || ''));
       if (sections.length) {
