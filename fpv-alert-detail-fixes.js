@@ -267,6 +267,37 @@
   }
 
   function updateSettings(doc) {
+    doc.querySelectorAll('button').forEach(button => {
+      if (/^恢复出厂(?:设置|配置)$/.test(button.textContent.trim())) button.style.display = 'none';
+    });
+    doc.querySelectorAll('.settings-nav button').forEach(button => {
+      if (button.querySelector('strong')?.textContent.trim() === '界面展示设置') button.style.display = 'none';
+    });
+    doc.querySelectorAll('.risk-settings-module > h3').forEach(heading => heading.style.display = 'none');
+    doc.querySelectorAll('.risk-drill-entry').forEach(entry => {
+      if (!entry.querySelector('.setting-item-icon')) {
+        const icon = doc.createElement('span'); icon.className = 'setting-item-icon'; icon.textContent = '⚑'; icon.setAttribute('aria-hidden','true'); entry.prepend(icon);
+      }
+    });
+    doc.querySelectorAll('.settings-workspace .setting-item').forEach(row => {
+      const title = row.querySelector('strong')?.textContent.trim();
+      if (['测向模式','增益'].includes(title) && !row.closest('[data-debug-detection]')) {
+        doc._debugDetectionRows ||= {};
+        if (!doc._debugDetectionRows[title]) doc._debugDetectionRows[title] = row.cloneNode(true);
+        row.style.display = 'none';
+      }
+    });
+    doc.querySelectorAll('.developer-menu').forEach(menu => {
+      if (menu.querySelector('[data-debug-detection]')) return;
+      const section = doc.createElement('section'); section.dataset.debugDetection = 'true';
+      section.innerHTML = '<h3>探测调试参数</h3><label>测向模式<select><option>全向</option><option>定向</option></select></label><label>增益（0–70）<input type="range" min="0" max="70"><output></output></label>';
+      const select = section.querySelector('select'), range = section.querySelector('input'), output = section.querySelector('output');
+      select.value = doc.defaultView.localStorage.getItem('debug-direction-mode') || '全向';
+      range.value = doc.defaultView.localStorage.getItem('debug-detection-gain') || '35'; output.value = range.value;
+      select.addEventListener('change',()=>doc.defaultView.localStorage.setItem('debug-direction-mode',select.value));
+      range.addEventListener('input',()=>{output.value=range.value;doc.defaultView.localStorage.setItem('debug-detection-gain',range.value);});
+      menu.append(section);
+    });
     const workspace = doc.querySelector('.settings-workspace');
     const category = workspace?.querySelector('.workspace-heading strong')?.textContent.trim();
     if (category === '参数设置') {
@@ -379,6 +410,8 @@
         workspace.classList.remove('risk-drill-active');
       }
       if (displaySection) {
+        const height = [...workspace.querySelectorAll('.setting-item')].find(row => row.querySelector('strong')?.textContent.trim() === '飞行高度报警阈值');
+        if (height && height.parentElement !== displaySection) displaySection.append(height);
         workspace.querySelectorAll('.risk-drill-entry').forEach(item => {
           if (item.parentElement !== displaySection) item.remove();
         });

@@ -210,3 +210,6 @@
 .app-shell .risk-drill-entry strong { display: block; color: #d9e7f3; font-size: 20px !important; line-height: 25px; font-weight: 500; }
 .app-shell .risk-drill-entry .setting-item-copy > span { display: block; margin-top: 5px; color: #8ba3b8; font-size: 16px !important; }
 .app-shell .risk-drill-entry[aria-expanded=true] > .ui-disclosure-chevron { transform: rotate(180deg); }
+[data-debug-detection] { padding: 16px; border: 1px solid #3b586f; border-radius: 8px; }
+[data-debug-detection] label { display: flex; align-items: center; gap: 16px; margin: 16px 0; }
+[data-debug-detection] select { padding: 10px; color: #d9e7f3; background: #183047; }
