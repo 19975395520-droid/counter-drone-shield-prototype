@@ -53,3 +53,17 @@ html:not([data-theme=light]) :is(.handheld-sweep-page,.history-fpv-dialog,.map-s
 .app-shell .map-tooltip-fields b { overflow-wrap:anywhere; }
 .app-shell .settings-nav button,.app-shell .setting-item { height:auto!important; }
 .app-shell .primary-nav { min-height:84px; }
+/* Responsive readability pass replaces oversized presentation typography. */
+.app-shell .map-target-tooltip:has(.map-flight-summary) { width:380px!important; max-width:calc(100vw - 32px)!important; }
+.app-shell :is(.settings-nav button strong,.primary-nav button span,.counter-mode strong,.setting-item-copy>strong,.setting-info>strong,.map-flight-grid strong) { white-space:nowrap!important; }
+.app-shell .settings-nav button { min-width:0; gap:10px; }
+.app-shell :is(.setting-item-copy,.setting-info,.target-card-info,.map-tooltip-fields) { min-width:0; }
+.app-shell :is(.serial,.target-meta,.target-card-info>strong,.target-card-info>.serial,.settings-nav button strong) { overflow:hidden; text-overflow:ellipsis; white-space:nowrap!important; max-width:100%; }
+.app-shell :is(input,select,textarea) { box-sizing:border-box; max-width:100%; min-width:0; }
+.app-shell .primary-nav { min-height:72px; }
+.app-shell .map-flight-grid { gap:14px 10px; }
+.app-shell .map-tooltip-fields>span b { white-space:normal; overflow-wrap:anywhere; }
+.app-shell .settings-nav button small { white-space:normal!important; }
+.app-shell .setting-item { gap:16px; }
+.app-shell .primary-nav { display:flex!important; justify-content:center; }
+.app-shell .primary-nav>button { flex:1 1 0!important; min-width:0!important; max-width:240px; width:auto!important; padding:10px 8px!important; white-space:nowrap!important; }
