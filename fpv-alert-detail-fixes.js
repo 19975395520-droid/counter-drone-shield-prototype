@@ -5,7 +5,7 @@
     if (!doc.querySelector('link[data-global-visual-system]')) {
       const visual = doc.createElement('link');
       visual.rel = 'stylesheet';
-      visual.href = new URL('global-visual-system.css?v=20261121-8', document.baseURI).href;
+      visual.href = new URL('global-visual-system.css?v=20261121-9', document.baseURI).href;
       visual.dataset.globalVisualSystem = 'true';
       doc.head.appendChild(visual);
     }
@@ -515,8 +515,10 @@
       if (detectionDisplay) {
         if (!detectionDisplay.querySelector('.counter-radius-setting')) {
           const row=doc.createElement('div');row.className='setting-item counter-radius-setting';
-          row.innerHTML='<div class="setting-item-copy"><strong>反制半径</strong><span>大于0且不超过10 km</span></div><div class="setting-item-control"><input type="number" min="0.1" max="10" step="0.1" aria-label="反制半径"><span> km </span><button type="button">保存</button><small role="status"></small></div>';
+          row.innerHTML='<div class="setting-item-copy"><strong>反制半径</strong><span>0.1–10 km</span></div><div class="setting-item-control"><div class="counter-radius-slider"><input type="range" min="0.1" max="10" step="0.1" aria-label="反制半径"><output></output><button type="button">保存</button></div><small role="status"></small></div>';
           const input=row.querySelector('input');input.value=doc.defaultView.localStorage.getItem('sky-shield-counter-radius')||'3';
+          const output=row.querySelector('output');output.textContent=Number(input.value).toFixed(1)+' km';
+          input.addEventListener('input',()=>{output.textContent=Number(input.value).toFixed(1)+' km';});
           row.querySelector('button').addEventListener('click',()=>{const value=Number(input.value),status=row.querySelector('small');if(!input.value||!Number.isFinite(value)||value<=0||value>10){status.textContent='请输入大于0且不超过10 km的半径';return;}doc.defaultView.localStorage.setItem('sky-shield-counter-radius',String(value));status.textContent='已保存';updateCounterRadius(doc);});
           detectionDisplay.append(row);
         }

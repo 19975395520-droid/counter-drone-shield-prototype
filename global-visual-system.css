@@ -119,3 +119,16 @@ html:not([data-theme=light]) :is(.handheld-sweep-page,.history-fpv-dialog,.map-s
 .countermeasure-radius-ring::after { content:attr(data-label); position:absolute; bottom:5px; left:50%; transform:translateX(-50%); white-space:nowrap; color:#ffb1a9; background:#3a1727d9; padding:3px 10px; border-radius:5px; font-size:16px; line-height:24px; }
 .counter-radius-setting input { width:100px; padding:8px; color:#e6edf7; background:#14283b; border:1px solid #40516b; border-radius:5px; }
 .counter-radius-setting small { display:block; color:#a1cbdc; }
+.app-shell .map .target-pin.selected { z-index:10000!important; }
+.app-shell .map .target-pin.selected>.map-target-tooltip { z-index:10001!important; isolation:isolate; }
+.app-shell .map .radar-zone { z-index:1!important; }
+.app-shell .map .pilot-map-links { z-index:2!important; }
+.app-shell .map .pilot-map-marker { z-index:3!important; }
+.app-shell .map .countermeasure-radius-ring { z-index:0!important; }
+.app-shell .map .target-pin:not(.selected) { z-index:4!important; }
+.app-shell .preview-dialog[open],.app-shell dialog[open] { z-index:20000!important; }
+.counter-radius-setting .setting-item-control { flex:0 1 480px; min-width:0; }
+.counter-radius-slider { display:flex; align-items:center; gap:16px; width:100%; }
+.counter-radius-slider input[type=range] { flex:1; width:0; min-width:100px; height:32px!important; min-height:32px!important; padding:0!important; accent-color:#7c5cff; background:transparent; border:0; }
+.counter-radius-slider output { white-space:nowrap; min-width:84px; text-align:right; font-variant-numeric:tabular-nums; }
+@media(max-width:900px){.counter-radius-setting{flex-wrap:wrap}.counter-radius-setting .setting-item-control{flex:1 0 100%}}
