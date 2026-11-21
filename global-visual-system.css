@@ -67,3 +67,17 @@ html:not([data-theme=light]) :is(.handheld-sweep-page,.history-fpv-dialog,.map-s
 .app-shell .setting-item { gap:16px; }
 .app-shell .primary-nav { display:flex!important; justify-content:center; }
 .app-shell .primary-nav>button { flex:1 1 0!important; min-width:0!important; max-width:240px; width:auto!important; padding:10px 8px!important; white-space:nowrap!important; }
+@media(min-width:1800px) {
+  .app-shell.page-detect .map-target-tooltip:has(.map-flight-summary) { width:390px!important; padding:18px!important; border-color:#D9644A!important; background:#101B2E!important; }
+  .app-shell.page-detect .map-flight-grid { gap:12px 10px; padding:12px 0; }
+  .app-shell.page-detect .map-flight-source { gap:18px; }
+  .app-shell.page-detect .reference-control-sidebar .frequency-options :is(button,label),
+  .app-shell.page-detect .reference-control-sidebar .band-options :is(button,label) { min-height:48px!important; padding:6px 12px!important; }
+  .app-shell.page-detect .counter-mode { height:56px!important; min-height:56px!important; }
+  .app-shell.page-detect .target-panel { background:#101B2E; border:1px solid #243146; }
+  .app-shell.page-detect .target-card-main { padding:12px!important; }
+  .app-shell.page-detect .alert-evidence { padding:16px!important; }
+  .app-shell.page-detect .evidence-result textarea { min-height:100px!important; }
+  .app-shell.page-detect :is(.detail-action,.ignore-action,.blacklist-action,.whitelist-action,.evidence-save) { min-height:40px!important; padding:6px 12px!important; }
+  .app-shell.page-detect .primary-nav { min-height:72px; }
+}
