@@ -130,7 +130,19 @@
     });
   }
 
+  function updateCounterRadius(doc) {
+    const radius=Number(doc.defaultView.localStorage.getItem('sky-shield-counter-radius')||'3');
+    doc.querySelectorAll('.radar-zone').forEach(zone=>{
+      let ring=zone.querySelector('.countermeasure-radius-ring');
+      if(!ring){ring=doc.createElement('div');ring.className='countermeasure-radius-ring';zone.append(ring);}
+      const detected=parseFloat(zone.querySelector('.radius-label')?.textContent)||6.6;
+      const size=radius/detected*100+'%';
+      ring.style.width=size;ring.style.height=size;
+      ring.setAttribute('aria-label','反制半径 '+radius+' km');ring.dataset.label='反制半径 '+radius+' km';
+    });
+  }
   function update(doc) {
+    updateCounterRadius(doc);
     doc.querySelectorAll('.runtime-trigger').forEach(trigger => {
       const status = trigger.querySelector('strong')?.textContent.includes('离线') ? '离线' : '运行中';
       const display = doc.createElement('div');
@@ -501,6 +513,13 @@
       const displaySection = [...workspace.querySelectorAll('section')].find(section => section.querySelector(':scope > h3')?.textContent.trim() === '告警详情显示');
       const detectionDisplay = [...workspace.querySelectorAll('section')].find(section => section.querySelector(':scope > h3')?.textContent.trim() === '探测界面');
       if (detectionDisplay) {
+        if (!detectionDisplay.querySelector('.counter-radius-setting')) {
+          const row=doc.createElement('div');row.className='setting-item counter-radius-setting';
+          row.innerHTML='<div class="setting-item-copy"><strong>反制半径</strong><span>大于0且不超过10 km</span></div><div class="setting-item-control"><input type="number" min="0.1" max="10" step="0.1" aria-label="反制半径"><span> km </span><button type="button">保存</button><small role="status"></small></div>';
+          const input=row.querySelector('input');input.value=doc.defaultView.localStorage.getItem('sky-shield-counter-radius')||'3';
+          row.querySelector('button').addEventListener('click',()=>{const value=Number(input.value),status=row.querySelector('small');if(!input.value||!Number.isFinite(value)||value<=0||value>10){status.textContent='请输入大于0且不超过10 km的半径';return;}doc.defaultView.localStorage.setItem('sky-shield-counter-radius',String(value));status.textContent='已保存';updateCounterRadius(doc);});
+          detectionDisplay.append(row);
+        }
         const duration = [...workspace.querySelectorAll('.setting-item')].find(row => row.querySelector('strong')?.textContent.trim() === '反制时长');
         const clearDuration = [...detectionDisplay.querySelectorAll('.setting-item')].find(row => /自动清除时长|清除时长/.test(row.querySelector('strong')?.textContent || ''));
         if (duration && duration.parentElement !== detectionDisplay) {

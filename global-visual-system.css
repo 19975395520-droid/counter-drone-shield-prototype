@@ -115,3 +115,7 @@ html:not([data-theme=light]) :is(.handheld-sweep-page,.history-fpv-dialog,.map-s
   .app-shell.page-detect :is(.detail-action,.ignore-action,.blacklist-action,.whitelist-action,.evidence-save) { min-height:40px!important; padding:6px 12px!important; }
   .app-shell.page-detect .primary-nav { min-height:72px; }
 }
+.countermeasure-radius-ring { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); border-radius:50%; border:2px solid #ed6259; background:radial-gradient(circle,rgba(220,45,55,.02) 0%,rgba(220,45,55,.12) 65%,rgba(240,65,65,.32) 100%); pointer-events:none; z-index:1; box-sizing:border-box; }
+.countermeasure-radius-ring::after { content:attr(data-label); position:absolute; bottom:5px; left:50%; transform:translateX(-50%); white-space:nowrap; color:#ffb1a9; background:#3a1727d9; padding:3px 10px; border-radius:5px; font-size:16px; line-height:24px; }
+.counter-radius-setting input { width:100px; padding:8px; color:#e6edf7; background:#14283b; border:1px solid #40516b; border-radius:5px; }
+.counter-radius-setting small { display:block; color:#a1cbdc; }
