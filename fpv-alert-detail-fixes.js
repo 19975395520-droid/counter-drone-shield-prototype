@@ -5,7 +5,7 @@
     if (!doc.querySelector('link[data-global-visual-system]')) {
       const visual = doc.createElement('link');
       visual.rel = 'stylesheet';
-      visual.href = new URL('global-visual-system.css?v=20261121-5', document.baseURI).href;
+      visual.href = new URL('global-visual-system.css?v=20261121-6', document.baseURI).href;
       visual.dataset.globalVisualSystem = 'true';
       doc.head.appendChild(visual);
     }
@@ -294,7 +294,7 @@
 
   function applyStrictTypography(doc) {
     const portrait = doc.defaultView.innerWidth <= 900;
-    const scale = {16:24,18:26,20:28,22:30,24:32,28:36,32:40};
+    const scale = {16:24,18:26,20:28,22:30,24:32,26:36,28:36,32:40,34:44};
     doc.querySelectorAll('body,body *:not(svg):not(svg *):not(canvas):not(script):not(style):not(link):not(iframe)').forEach(el => {
       let size = portrait ? 22 : 20, weight = 400;
       if (el.matches('h1,.page-title')) { size=32; weight=700; }
@@ -314,6 +314,9 @@
         if(el.matches('.primary-nav button,.primary-nav button span')){size=28;weight=600;}
         if(el.matches('.counter-mode strong,.counter-mode')){size=24;weight=600;}
         if(el.matches('.map-flight-grid strong,.map-flight-coordinate strong'))size=22;
+        if(el.matches('.reference-control-sidebar .brand>strong')){size=34;weight=700;}
+        if(el.matches('.counter-band span')){size=26;weight=600;}
+        if(el.matches('.counter-mode,.counter-mode strong')){size=28;weight=600;}
       }
       el.dataset.strictTypography = size+','+weight;
       el.style.setProperty('font-size',size+'px','important');
