@@ -46,3 +46,10 @@
   .app-shell .target-card-info>.serial { font-size:18px!important; line-height:26px!important; }
 }
 html:not([data-theme=light]) :is(.handheld-sweep-page,.history-fpv-dialog,.map-storage-dialog) { color:var(--ui-text); background-color:var(--ui-panel); }
+.app-shell :is(button,input,select,.setting-item,.counter-mode) { height:auto; min-height:64px; }
+.app-shell .map-target-tooltip:has(.map-flight-summary) { width:620px!important; max-width:calc(100vw - 32px); }
+.app-shell .map-tooltip-fields { min-width:0; }
+.app-shell .map-tooltip-fields>span { display:flex; flex-wrap:wrap; gap:8px; }
+.app-shell .map-tooltip-fields b { overflow-wrap:anywhere; }
+.app-shell .settings-nav button,.app-shell .setting-item { height:auto!important; }
+.app-shell .primary-nav { min-height:84px; }

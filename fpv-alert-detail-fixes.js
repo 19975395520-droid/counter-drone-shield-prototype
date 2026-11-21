@@ -5,7 +5,7 @@
     if (!doc.querySelector('link[data-global-visual-system]')) {
       const visual = doc.createElement('link');
       visual.rel = 'stylesheet';
-      visual.href = new URL('global-visual-system.css?v=20261121-1', document.baseURI).href;
+      visual.href = new URL('global-visual-system.css?v=20261121-2', document.baseURI).href;
       visual.dataset.globalVisualSystem = 'true';
       doc.head.appendChild(visual);
     }
@@ -289,6 +289,37 @@
     doc.querySelectorAll('.alert-detail-dialog').forEach(detail => enhanceDetail(doc, detail));
     normalizeHeight(doc);
     updateSettings(doc);
+    applyStrictTypography(doc);
+  }
+
+  function applyStrictTypography(doc) {
+    const scale = {22:26,24:32,26:36,30:40,32:42,34:44,40:50,44:56,56:68,68:82};
+    doc.querySelectorAll('body,body *:not(svg):not(svg *):not(canvas):not(script):not(style):not(link):not(iframe)').forEach(el => {
+      if (el.dataset.strictTypography) {
+        const [size,weight] = el.dataset.strictTypography.split(',').map(Number);
+        if(size){el.style.setProperty('font-size',size+'px','important');el.style.setProperty('line-height',scale[size]+'px','important');el.style.setProperty('font-weight',String(weight),'important');}
+        return;
+      }
+      el.dataset.strictTypography = 'true';
+      const computed = doc.defaultView.getComputedStyle(el);
+      const original = parseFloat(computed.fontSize) || 17;
+      let size = original <= 16 ? 24 : original <= 22 ? 32 : original <= 34 ? 34 : original <= 44 ? 40 : original <= 56 ? 56 : 68;
+      let weight = Number(computed.fontWeight) >= 650 ? 700 : Number(computed.fontWeight) >= 500 ? 600 : 400;
+      if (el.matches('h1,.page-title')) { size=56; weight=700; }
+      if (el.matches('h2,.history-reference-title')) { size=44; weight=700; }
+      if (el.matches('h3,h4,.setting-item-copy>strong,.setting-info>strong')) { size=40; weight=600; }
+      if (el.matches('.primary-nav button,.primary-nav button span,.settings-nav button strong')) { size=56; weight=700; }
+      if (el.matches('small,dt,.map-tooltip-fields i,.map-flight-grid small,.map-flight-coordinate small')) { size=24; weight=400; }
+      if (el.matches('.map-tooltip-fields b,.serial,.target-meta,.map-flight-source,.map-flight-source span')) { size=32; weight=400; }
+      if (el.matches('.map-tooltip-heading strong')) { size=40; weight=600; }
+      if (el.matches('input,select,textarea,button')) { size=34; weight=400; }
+      if (el.matches('.primary-nav button')) { size=56; weight=700; }
+      el.dataset.strictTypography = size+','+weight;
+      el.style.setProperty('font-size',size+'px','important');
+      el.style.setProperty('line-height',scale[size]+'px','important');
+      el.style.setProperty('font-weight',String(weight),'important');
+      el.style.setProperty('font-variant-numeric','tabular-nums','important');
+    });
   }
 
   function openSweep(doc) {
