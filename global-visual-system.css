@@ -1,0 +1,48 @@
+/* Approved shield visual language shared by all product pages. */
+:root {
+  --ui-background:#0A1020; --ui-panel:#101B2E; --ui-border:#243146;
+  --ui-accent:#7C5CFF; --ui-alert:#D9644A; --ui-success:#3DDC97;
+  --ui-text:#E6EDF7; --ui-muted:#94A3B8;
+}
+.app-shell { color:var(--ui-text); background:var(--ui-background); font-variant-numeric:tabular-nums; }
+.app-shell :is(button,input,select,textarea,strong,span,td,dd,time) { font-variant-numeric:tabular-nums; }
+.app-shell :is(.settings-workspace,.settings-nav,.history-table,.analytics-panel,.target-panel,.reference-control-sidebar,.whitelist-table,.preview-dialog,.history-reference-section,.countermeasure-card) {
+  background-color:var(--ui-panel); border-color:var(--ui-border); background-image:none; box-shadow:none;
+}
+.app-shell :is(.setting-item-copy>span,.setting-info small,.serial,.target-meta,.history-meta,.history-reference-field>span,.alert-metrics dt,.config-table small,.workspace-heading>div>span) {
+  color:var(--ui-muted)!important;
+}
+.app-shell :is(.setting-item-copy>strong,.setting-info>strong,.history-reference-field>strong,.alert-metrics dd,.target-model,.history-model) { color:var(--ui-text); }
+.app-shell :is(.control-options>button,.counter-mode,.custom-control-heading).selected {
+  border-color:var(--ui-accent)!important; color:var(--ui-text)!important; box-shadow:none!important;
+}
+.app-shell .counter-mode.selected>i { background:var(--ui-accent)!important; border-color:var(--ui-accent)!important; box-shadow:none!important; }
+.app-shell .primary-nav>button.active { border-bottom:2px solid #64D9ED!important; color:#86E3F0!important; }
+.app-shell :is(.target-card-info>.serial,.history-meta,.serial) { color:var(--ui-muted)!important; }
+.app-shell .target-card-info>.serial { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.app-shell .map-tooltip-fields>span:has(i) { min-width:0; }
+.app-shell .map-tooltip-fields>span b { white-space:nowrap; }
+@media(min-width:1800px) {
+  .app-shell { --type-title-1:56px; --line-title-1:68px; --type-title-2:44px; --line-title-2:56px; --type-title-3:40px; --line-title-3:50px; }
+  .app-shell .primary-nav>button,.app-shell .primary-nav>button :is(span,strong) { font-size:34px!important; line-height:44px!important; }
+  .app-shell .frequency-options label,.app-shell .frequency-options button { min-height:64px!important; font-size:32px!important; line-height:56px!important; }
+  .app-shell .counter-mode,.app-shell .counter-mode strong { min-height:64px; font-size:32px!important; line-height:64px!important; }
+  .app-shell .settings-nav>button :is(strong,span),.app-shell .settings-nav>button { font-size:28px!important; line-height:40px!important; }
+  .app-shell .settings-workspace :is(.setting-item-copy>strong,.setting-info>strong) { font-size:28px!important; line-height:40px!important; }
+  .app-shell .settings-workspace :is(h3,.workspace-heading strong),.app-shell .history-reference-title { font-size:32px!important; line-height:42px!important; }
+  .app-shell .target-card-info strong { font-size:32px!important; line-height:42px!important; }
+  .app-shell .target-card-info>.serial { font-size:24px!important; line-height:32px!important; }
+  .app-shell :is(.detail-action,.ignore-action) { font-size:28px!important; line-height:40px!important; }
+  .app-shell .map-target-tooltip .map-tooltip-heading strong { font-size:40px!important; line-height:50px!important; }
+  .app-shell .map-target-tooltip:has(.map-flight-summary) { width:560px!important; }
+  .app-shell .map-flight-grid small,.app-shell .map-flight-coordinate small { font-size:24px!important; line-height:32px!important; }
+  .app-shell .map-flight-grid strong { font-size:32px!important; line-height:42px!important; white-space:nowrap; }
+  .app-shell .map-flight-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .app-shell .map-flight-coordinate strong { font-size:26px!important; line-height:36px!important; }
+  .app-shell .setting-item { min-height:78px; }
+}
+@media(max-width:900px) {
+  .app-shell .settings-workspace :is(.setting-item-copy>strong,.setting-info>strong) { font-size:20px!important; line-height:25px!important; }
+  .app-shell .target-card-info>.serial { font-size:18px!important; line-height:26px!important; }
+}
+html:not([data-theme=light]) :is(.handheld-sweep-page,.history-fpv-dialog,.map-storage-dialog) { color:var(--ui-text); background-color:var(--ui-panel); }

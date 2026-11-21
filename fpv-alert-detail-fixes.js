@@ -2,6 +2,13 @@
   const cssHref = new URL('fpv-alert-detail-fixes.css', document.baseURI).href;
 
   function attachStyles(doc) {
+    if (!doc.querySelector('link[data-global-visual-system]')) {
+      const visual = doc.createElement('link');
+      visual.rel = 'stylesheet';
+      visual.href = new URL('global-visual-system.css?v=20261121-1', document.baseURI).href;
+      visual.dataset.globalVisualSystem = 'true';
+      doc.head.appendChild(visual);
+    }
     if (doc.querySelector('link[data-fpv-alert-detail-fixes]')) return;
     const link = doc.createElement('link');
     link.rel = 'stylesheet';
