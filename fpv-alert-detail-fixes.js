@@ -293,6 +293,10 @@
   }
 
   function applyStrictTypography(doc) {
+    doc.querySelectorAll('.settings-nav button,.settings-nav button strong').forEach(el => {
+      el.dataset.strictTypography = '32,600';
+      el.style.setProperty('white-space','nowrap','important');
+    });
     const scale = {22:26,24:32,26:36,30:40,32:42,34:44,40:50,44:56,56:68,68:82};
     doc.querySelectorAll('body,body *:not(svg):not(svg *):not(canvas):not(script):not(style):not(link):not(iframe)').forEach(el => {
       if (el.dataset.strictTypography) {
