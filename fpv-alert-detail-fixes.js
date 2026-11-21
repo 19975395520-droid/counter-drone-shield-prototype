@@ -5,7 +5,7 @@
     if (!doc.querySelector('link[data-global-visual-system]')) {
       const visual = doc.createElement('link');
       visual.rel = 'stylesheet';
-      visual.href = new URL('global-visual-system.css?v=20261121-6', document.baseURI).href;
+      visual.href = new URL('global-visual-system.css?v=20261121-8', document.baseURI).href;
       visual.dataset.globalVisualSystem = 'true';
       doc.head.appendChild(visual);
     }
@@ -290,6 +290,16 @@
     normalizeHeight(doc);
     updateSettings(doc);
     applyStrictTypography(doc);
+    doc.querySelectorAll('.map-target-tooltip').forEach(tooltip => {
+      if (!tooltip.querySelector('.map-flight-summary')) return;
+      tooltip.classList.add('reference-drone-popup');
+      tooltip.querySelectorAll('*:not(svg):not(svg *)').forEach(el => {
+        ['font-size','line-height','font-weight'].forEach(property => el.style.removeProperty(property));
+      });
+      tooltip.querySelectorAll('.map-tooltip-fields>span').forEach(row => {
+        if (row.querySelector('i')?.textContent.trim() === '经纬度') row.querySelector('i').textContent = '经纬度';
+      });
+    });
   }
 
   function applyStrictTypography(doc) {
