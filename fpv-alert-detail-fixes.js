@@ -489,6 +489,16 @@
     });
     if (category === '参数设置') {
       const displaySection = [...workspace.querySelectorAll('section')].find(section => section.querySelector(':scope > h3')?.textContent.trim() === '告警详情显示');
+      const detectionDisplay = [...workspace.querySelectorAll('section')].find(section => section.querySelector(':scope > h3')?.textContent.trim() === '探测界面');
+      if (detectionDisplay) {
+        const duration = [...workspace.querySelectorAll('.setting-item')].find(row => row.querySelector('strong')?.textContent.trim() === '反制时长');
+        const clearDuration = [...detectionDisplay.querySelectorAll('.setting-item')].find(row => /自动清除时长|清除时长/.test(row.querySelector('strong')?.textContent || ''));
+        if (duration && duration.parentElement !== detectionDisplay) {
+          const oldSection = duration.closest('section');
+          if (clearDuration) clearDuration.after(duration); else detectionDisplay.append(duration);
+          if (oldSection && oldSection !== detectionDisplay && !oldSection.querySelector('.setting-item')) oldSection.style.display = 'none';
+        }
+      }
       const module = workspace.querySelector('.risk-settings-module');
       const entry = workspace.querySelector('.risk-drill-entry');
       if (displaySection && module && entry && entry.parentElement !== displaySection) {
