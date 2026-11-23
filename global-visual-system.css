@@ -132,3 +132,9 @@ html:not([data-theme=light]) :is(.handheld-sweep-page,.history-fpv-dialog,.map-s
 .counter-radius-slider input[type=range] { flex:1; width:0; min-width:100px; height:32px!important; min-height:32px!important; padding:0!important; accent-color:#7c5cff; background:transparent; border:0; }
 .counter-radius-slider output { white-space:nowrap; min-width:84px; text-align:right; font-variant-numeric:tabular-nums; }
 @media(max-width:900px){.counter-radius-setting{flex-wrap:wrap}.counter-radius-setting .setting-item-control{flex:1 0 100%}}
+.combination-options { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; margin:20px 0; }
+.combination-options label { display:flex; align-items:center; gap:12px; padding:12px; border:1px solid #40516b; border-radius:6px; }
+.combination-options input { width:22px!important; height:22px!important; min-height:22px!important; }
+.counter-radius-setting .range-setting { display:flex; align-items:center; gap:16px; }
+.counter-radius-setting .range-setting input { flex:1; width:0; accent-color:#7c5cff; border:0; padding:0; }
+.counter-radius-setting .range-setting b { min-width:90px; white-space:nowrap; text-align:right; }

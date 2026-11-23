@@ -5,7 +5,7 @@
     if (!doc.querySelector('link[data-global-visual-system]')) {
       const visual = doc.createElement('link');
       visual.rel = 'stylesheet';
-      visual.href = new URL('global-visual-system.css?v=20261121-9', document.baseURI).href;
+      visual.href = new URL('global-visual-system.css?v=20261123-1', document.baseURI).href;
       visual.dataset.globalVisualSystem = 'true';
       doc.head.appendChild(visual);
     }
@@ -143,6 +143,24 @@
   }
   function update(doc) {
     updateCounterRadius(doc);
+    doc.querySelectorAll('.floating-direction').forEach(button=>button.style.setProperty('display','none','important'));
+    doc.querySelectorAll('[data-manual-cooling] strong').forEach(label=>{if(label.textContent!=='风扇')label.textContent='风扇';});
+    const handheld=doc.defaultView.innerWidth<=900||(doc.defaultView.innerWidth===1600&&doc.defaultView.innerHeight===720);
+    if(handheld){
+      const enabled=doc.defaultView.localStorage.getItem('handheld-talk-visible')!=='false';
+      doc.querySelectorAll('.talk-entry-button').forEach(button=>button.style.setProperty('display',enabled?'flex':'none','important'));
+      const general=[...doc.querySelectorAll('.settings-workspace section')].find(section=>section.querySelector(':scope>h3')?.textContent.trim()==='主题与语言');
+      if(general&&!doc.querySelector('.handheld-talk-setting')){
+        const row=doc.createElement('div');row.className='setting-item handheld-talk-setting';row.innerHTML='<div class="setting-item-copy"><strong>对讲</strong><span>显示对讲悬浮按钮</span></div><button type="button" class="toggle" role="switch" aria-label="对讲悬浮按钮"><i></i></button>';
+        const toggle=row.querySelector('button');toggle.classList.toggle('on',enabled);toggle.setAttribute('aria-checked',String(enabled));toggle.addEventListener('click',()=>{const next=toggle.classList.toggle('on');toggle.setAttribute('aria-checked',String(next));doc.defaultView.localStorage.setItem('handheld-talk-visible',String(next));doc.querySelectorAll('.talk-entry-button').forEach(button=>button.style.setProperty('display',next?'flex':'none','important'));});general.after(row);
+      }
+    }
+    doc.querySelectorAll('.counter-band').forEach(band=>{
+      const label=band.querySelector('span');if(!label||!['400-600M','组合频段'].includes(label.textContent.trim()))return;
+      if(label.textContent!=='组合频段')label.textContent='组合频段';
+      if(label.dataset.combinationReady)return;label.dataset.combinationReady='true';label.style.cursor='pointer';
+      label.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();let dialog=doc.querySelector('.combination-band-dialog');if(!dialog){dialog=doc.createElement('dialog');dialog.className='preview-dialog combination-band-dialog';dialog.innerHTML='<header><h2>组合频段</h2><button type="button" aria-label="关闭组合频段">×</button></header><div class="preview-dialog-body"><p>选择组合频段</p><div class="combination-options"></div><footer><button type="button" class="combination-save">保存</button></footer></div>';const options=dialog.querySelector('.combination-options');let selected;try{selected=JSON.parse(doc.defaultView.localStorage.getItem('combination-bands')||'["400-600M"]');}catch(_){selected=['400-600M'];}['400-600M','900M','1.5G','2.4G','5.2G','5.8G'].forEach(name=>{const row=doc.createElement('label');const input=doc.createElement('input');input.type='checkbox';input.value=name;input.checked=selected.includes(name);row.append(input,doc.createTextNode(name));options.append(row);});dialog.querySelector('header button').addEventListener('click',()=>dialog.close());dialog.querySelector('.combination-save').addEventListener('click',()=>{doc.defaultView.localStorage.setItem('combination-bands',JSON.stringify([...dialog.querySelectorAll('input:checked')].map(input=>input.value)));dialog.close();});doc.body.append(dialog);}dialog.showModal();});
+    });
     doc.querySelectorAll('.runtime-trigger').forEach(trigger => {
       const status = trigger.querySelector('strong')?.textContent.includes('离线') ? '离线' : '运行中';
       const display = doc.createElement('div');
@@ -378,7 +396,7 @@
 
   function updateSettings(doc) {
     doc.querySelectorAll('button').forEach(button => {
-      if (/^恢复出厂(?:设置|配置)$/.test(button.textContent.trim())) button.style.display = 'none';
+      if (/^恢复出厂(?:设置|配置)?$/.test(button.textContent.trim())) {const row=button.closest('.setting-item');(row||button).style.display = 'none';}
     });
     doc.querySelectorAll('.settings-nav button').forEach(button => {
       if (button.querySelector('strong')?.textContent.trim() === '界面展示设置') button.style.display = 'none';
@@ -462,7 +480,7 @@
     });
     doc.querySelectorAll('.setting-item').forEach(row => {
       const title = row.querySelector('strong')?.textContent.trim();
-      if (['反制面板显示', '对讲'].includes(title)) row.style.display = 'none';
+      if (['反制面板显示', '对讲'].includes(title) && !row.classList.contains('handheld-talk-setting')) row.style.display = 'none';
       if (title === '自动定位' && !row.dataset.customPosition) {
         row.dataset.customPosition = 'true';
         row.querySelector('strong').textContent = '自定义位置';
@@ -515,11 +533,10 @@
       if (detectionDisplay) {
         if (!detectionDisplay.querySelector('.counter-radius-setting')) {
           const row=doc.createElement('div');row.className='setting-item counter-radius-setting';
-          row.innerHTML='<div class="setting-item-copy"><strong>反制半径</strong><span>0.1–10 km</span></div><div class="setting-item-control"><div class="counter-radius-slider"><input type="range" min="0.1" max="10" step="0.1" aria-label="反制半径"><output></output><button type="button">保存</button></div><small role="status"></small></div>';
+          row.innerHTML='<div class="setting-item-copy"><strong>反制半径</strong><span>支持 0–10 KM</span></div><div class="setting-item-control"><div class="range-setting"><input type="range" min="0" max="10" step="0.1" aria-label="反制半径"><b></b></div></div>';
           const input=row.querySelector('input');input.value=doc.defaultView.localStorage.getItem('sky-shield-counter-radius')||'3';
-          const output=row.querySelector('output');output.textContent=Number(input.value).toFixed(1)+' km';
-          input.addEventListener('input',()=>{output.textContent=Number(input.value).toFixed(1)+' km';});
-          row.querySelector('button').addEventListener('click',()=>{const value=Number(input.value),status=row.querySelector('small');if(!input.value||!Number.isFinite(value)||value<=0||value>10){status.textContent='请输入大于0且不超过10 km的半径';return;}doc.defaultView.localStorage.setItem('sky-shield-counter-radius',String(value));status.textContent='已保存';updateCounterRadius(doc);});
+          const output=row.querySelector('b');output.textContent=Number(input.value).toFixed(1)+' KM';
+          input.addEventListener('input',()=>{output.textContent=Number(input.value).toFixed(1)+' KM';doc.defaultView.localStorage.setItem('sky-shield-counter-radius',input.value);updateCounterRadius(doc);});
           detectionDisplay.append(row);
         }
         const duration = [...workspace.querySelectorAll('.setting-item')].find(row => row.querySelector('strong')?.textContent.trim() === '反制时长');
