@@ -10,3 +10,6 @@
 .settings-workspace>.application-manager-page>:not(header){margin-left:24px;margin-right:24px}
 .settings-workspace>.application-manager-page .apps-toolbar{margin-top:24px}
 @media(min-width:901px){.settings-workspace>.application-manager-page .apps-back{display:none}}
+.mobile-application-manager{inset:48px 0 88px!important;z-index:12000!important;padding:0!important;border:1px solid #354a64;border-radius:8px}
+.mobile-application-manager>header{position:sticky;top:0;z-index:2;padding:18px 20px;margin:0;background:#192d40;border-bottom:1px solid #30485f}
+.mobile-application-manager>:not(header){margin-left:20px;margin-right:20px}.mobile-application-manager .apps-toolbar{margin-top:20px}

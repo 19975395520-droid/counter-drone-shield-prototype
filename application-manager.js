@@ -40,14 +40,14 @@
     page.querySelector('.apps-back').addEventListener('click',close);
     page.querySelector('input').addEventListener('input',render);page.querySelector('select').addEventListener('change',render);
     page.querySelector('.apps-store').addEventListener('click',()=>{if(bridge?.openAppStore){try{bridge.openAppStore();}catch(_){feedback.textContent='无法打开系统应用商店';}}else feedback.textContent='请在安卓设备打开系统自带应用商店；网页版暂不支持启动安卓应用。';});
-    if(workspace){workspace.classList.add('app-management-active');workspace.append(page);}else doc.body.append(page);
+    if(doc.defaultView.innerWidth<=900){page.classList.add('mobile-application-manager');doc.body.append(page);}else if(workspace){workspace.classList.add('app-management-active');workspace.append(page);}else doc.body.append(page);
     doc.querySelectorAll('.settings-nav button').forEach(button=>button.classList.toggle('active',button.classList.contains('app-management-entry')));
     doc.querySelectorAll('.settings-nav button:not(.app-management-entry),.primary-nav button').forEach(button=>button.addEventListener('click',close,{once:true}));
     render();
   }
   function attach(doc){
     if(!doc?.head)return;
-    if(!doc.querySelector('[data-app-management-style]')){const link=doc.createElement('link');link.rel='stylesheet';link.href=new URL('application-manager.css?v=20261123-3',base).href;link.dataset.appManagementStyle='true';doc.head.append(link);}
+    if(!doc.querySelector('[data-app-management-style]')){const link=doc.createElement('link');link.rel='stylesheet';link.href=new URL('application-manager.css?v=20261123-5',base).href;link.dataset.appManagementStyle='true';doc.head.append(link);}
     doc.querySelectorAll('.settings-nav').forEach(nav=>{if(nav.querySelector('.app-management-entry'))return;const template=nav.querySelector('button');const button=template?template.cloneNode(true):doc.createElement('button');button.type='button';button.className='app-management-entry';button.removeAttribute('style');button.querySelectorAll('[style]').forEach(el=>el.removeAttribute('style'));button.innerHTML='<span class="setting-icon">▦</span><div class="app-management-menu-copy"><strong>应用管理</strong><small>查看和管理已安装应用</small></div><span aria-hidden="true">›</span>';button.addEventListener('click',()=>open(doc));nav.append(button);});
     if(!doc.documentElement.dataset.appManagerWatch){doc.documentElement.dataset.appManagerWatch='true';let pending=false;new doc.defaultView.MutationObserver(()=>{if(pending)return;pending=true;doc.defaultView.requestAnimationFrame(()=>{pending=false;attach(doc);});}).observe(doc.documentElement,{childList:true,subtree:true});}
   }

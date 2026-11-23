@@ -148,11 +148,15 @@
     const handheld=doc.defaultView.innerWidth<=900||(doc.defaultView.innerWidth===1600&&doc.defaultView.innerHeight===720);
     if(handheld){
       const enabled=doc.defaultView.localStorage.getItem('counterShieldTalkEnabled')!=='false';
-      doc.querySelectorAll('.talk-entry-button').forEach(button=>button.style.setProperty('display',enabled?'flex':'none','important'));
+      doc.querySelectorAll('.talk-entry-button').forEach(button=>{
+        button.style.setProperty('display',enabled?'flex':'none','important');
+        button.style.setProperty('z-index','15000','important');
+        if(enabled){const rect=button.getBoundingClientRect();if(rect.right<40||rect.left>doc.defaultView.innerWidth-40||rect.bottom<48||rect.top>doc.defaultView.innerHeight-88){button.style.setProperty('left','16px','important');button.style.setProperty('top','auto','important');button.style.setProperty('bottom','112px','important');}}
+      });
       const general=[...doc.querySelectorAll('.settings-workspace section')].find(section=>section.querySelector(':scope>h3')?.textContent.trim()==='主题与语言');
       if(general&&!doc.querySelector('.handheld-talk-setting')){
         const row=doc.createElement('div');row.className='setting-item handheld-talk-setting';row.innerHTML='<div class="setting-item-copy"><strong>对讲</strong><span>显示对讲悬浮按钮</span></div><button type="button" class="toggle" role="switch" aria-label="对讲悬浮按钮"><i></i></button>';
-        const toggle=row.querySelector('button');toggle.classList.toggle('on',enabled);toggle.setAttribute('aria-checked',String(enabled));toggle.addEventListener('click',()=>{const next=toggle.classList.toggle('on');toggle.setAttribute('aria-checked',String(next));doc.defaultView.localStorage.setItem('counterShieldTalkEnabled',String(next));doc.querySelectorAll('.talk-entry-button').forEach(button=>button.style.setProperty('display',next?'flex':'none','important'));if(!next)doc.querySelector('.talk-page-overlay')?.remove();});general.after(row);
+        const toggle=row.querySelector('button');toggle.classList.toggle('on',enabled);toggle.setAttribute('aria-checked',String(enabled));toggle.addEventListener('click',()=>{const next=toggle.classList.toggle('on');toggle.setAttribute('aria-checked',String(next));doc.defaultView.localStorage.setItem('counterShieldTalkEnabled',String(next));doc.querySelectorAll('.talk-entry-button').forEach(button=>button.style.setProperty('display',next?'flex':'none','important'));if(!next)doc.querySelector('.talk-page-overlay')?.remove();const signal=doc.createElement('span');signal.hidden=true;doc.body.append(signal);signal.remove();});general.after(row);
       }
     }
     doc.querySelectorAll('.counter-band').forEach(band=>{
