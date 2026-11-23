@@ -147,16 +147,16 @@
     doc.querySelectorAll('[data-manual-cooling] strong').forEach(label=>{if(label.textContent!=='风扇')label.textContent='风扇';});
     const handheld=doc.defaultView.innerWidth<=900||(doc.defaultView.innerWidth===1600&&doc.defaultView.innerHeight===720);
     if(handheld){
-      const enabled=doc.defaultView.localStorage.getItem('handheld-talk-visible')!=='false';
+      const enabled=doc.defaultView.localStorage.getItem('counterShieldTalkEnabled')!=='false';
       doc.querySelectorAll('.talk-entry-button').forEach(button=>button.style.setProperty('display',enabled?'flex':'none','important'));
       const general=[...doc.querySelectorAll('.settings-workspace section')].find(section=>section.querySelector(':scope>h3')?.textContent.trim()==='主题与语言');
       if(general&&!doc.querySelector('.handheld-talk-setting')){
         const row=doc.createElement('div');row.className='setting-item handheld-talk-setting';row.innerHTML='<div class="setting-item-copy"><strong>对讲</strong><span>显示对讲悬浮按钮</span></div><button type="button" class="toggle" role="switch" aria-label="对讲悬浮按钮"><i></i></button>';
-        const toggle=row.querySelector('button');toggle.classList.toggle('on',enabled);toggle.setAttribute('aria-checked',String(enabled));toggle.addEventListener('click',()=>{const next=toggle.classList.toggle('on');toggle.setAttribute('aria-checked',String(next));doc.defaultView.localStorage.setItem('handheld-talk-visible',String(next));doc.querySelectorAll('.talk-entry-button').forEach(button=>button.style.setProperty('display',next?'flex':'none','important'));});general.after(row);
+        const toggle=row.querySelector('button');toggle.classList.toggle('on',enabled);toggle.setAttribute('aria-checked',String(enabled));toggle.addEventListener('click',()=>{const next=toggle.classList.toggle('on');toggle.setAttribute('aria-checked',String(next));doc.defaultView.localStorage.setItem('counterShieldTalkEnabled',String(next));doc.querySelectorAll('.talk-entry-button').forEach(button=>button.style.setProperty('display',next?'flex':'none','important'));if(!next)doc.querySelector('.talk-page-overlay')?.remove();});general.after(row);
       }
     }
     doc.querySelectorAll('.counter-band').forEach(band=>{
-      const label=band.querySelector('span');if(!label||!['400-600M','组合频段'].includes(label.textContent.trim()))return;
+      const label=band.querySelector('span');if(!label||!(label.textContent.trim()==='组合频段'||/400\s*[-–—]\s*600\s*M/i.test(label.textContent)))return;
       if(label.textContent!=='组合频段')label.textContent='组合频段';
       if(label.dataset.combinationReady)return;label.dataset.combinationReady='true';label.style.cursor='pointer';
       label.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();let dialog=doc.querySelector('.combination-band-dialog');if(!dialog){dialog=doc.createElement('dialog');dialog.className='preview-dialog combination-band-dialog';dialog.innerHTML='<header><h2>组合频段</h2><button type="button" aria-label="关闭组合频段">×</button></header><div class="preview-dialog-body"><p>选择组合频段</p><div class="combination-options"></div><footer><button type="button" class="combination-save">保存</button></footer></div>';const options=dialog.querySelector('.combination-options');let selected;try{selected=JSON.parse(doc.defaultView.localStorage.getItem('combination-bands')||'["400-600M"]');}catch(_){selected=['400-600M'];}['400-600M','900M','1.5G','2.4G','5.2G','5.8G'].forEach(name=>{const row=doc.createElement('label');const input=doc.createElement('input');input.type='checkbox';input.value=name;input.checked=selected.includes(name);row.append(input,doc.createTextNode(name));options.append(row);});dialog.querySelector('header button').addEventListener('click',()=>dialog.close());dialog.querySelector('.combination-save').addEventListener('click',()=>{doc.defaultView.localStorage.setItem('combination-bands',JSON.stringify([...dialog.querySelectorAll('input:checked')].map(input=>input.value)));dialog.close();});doc.body.append(dialog);}dialog.showModal();});
@@ -568,6 +568,7 @@
 
   function attach(doc) {
     if (!doc?.documentElement) return;
+    if(doc.URL?.includes('ring-spectrum.html')) return;
     attachStyles(doc);
     update(doc);
     if (doc.documentElement.dataset.fpvLandscapeDetailObserver) return;
